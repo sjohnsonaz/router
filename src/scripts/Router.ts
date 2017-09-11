@@ -11,6 +11,7 @@ export default class Router {
     handler = (event?: HashChangeEvent) => {
         var url = (event && event.newURL) ? event.newURL : window.location.href;
         var hash = getHash(url);
+        console.log('Route: "' + hash + '"');
         var routes = this.routes;
         var routesCalled = 0;
         for (var route in routes) {
