@@ -1,0 +1,7 @@
+site_name: Router
+site_url: https://sjohnsonaz.github.io/router
+repo_url: https://github.com/sjohnsonaz/router
+copyright: Copyright &copy; 2017 Sean Johnson
+pages:
+    - Home: index.md
+theme: readthedocs

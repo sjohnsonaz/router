@@ -1,0 +1,36 @@
+{
+  "name": "router",
+  "version": "0.0.0",
+  "description": "",
+  "repository": "https://www.github.com/sjohnsonaz/router.git",
+  "license": "MIT",
+  "author": "Sean Johnson <sjohnson@sjohnsonaz.com>",
+  "main": "dist/scripts/main.js",
+  "typings": "dist/scripts/main.d.ts",
+  "scripts": {
+    "start": "node ./dist/scripts/main.js",
+    "build": "tsc",
+    "prepublishOnly": "tsc --declaration",
+    "test": "tsc && node src/mocha/NodeRunner.js",
+    "min": "webpack --config webpack.config.js --progress",
+    "dev": "webpack --config webpack.dev.config.js --progress",
+    "watch": "webpack --config webpack.dev.config.js --watch --progress",
+    "node": "node ./dist/scripts/main.js",
+    "nodemon": "nodemon ./dist/scripts/main.js",
+    "mkdocs": "mkdocs build",
+    "mkdocs-serve": "mkdocs serve",
+    "mkdocs-deploy": "mkdocs gh-deploy"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chai": "4.0.4",
+    "@types/mocha": "2.2.43",
+    "chai": "4.1.2",
+    "jsdom": "11.2.0",
+    "mocha": "3.5.3",
+    "nodemon": "1.12.0",
+    "ts-loader": "2.3.7",
+    "typescript": "2.5.2",
+    "webpack": "3.5.6"
+  }
+}
