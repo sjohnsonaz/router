@@ -1,2 +1,2 @@
-export { Router as Router } from './Router';
+export { RouteListener as RouteListener } from './RouteListener';
 export { default as RouteHandler } from './RouteHandler';

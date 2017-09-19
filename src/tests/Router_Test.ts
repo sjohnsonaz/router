@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
-import { Router } from '../scripts/main';
+import { RouteListener } from '../scripts/main';
 import { wait } from '../scripts/util/TestUtils';
 
 describe('Route', () => {
-    class SimpleRouter extends Router {
+    class SimpleRouter extends RouteListener {
         runCount: number = 0;
         currentRoute: string;
         route(hash: string) {

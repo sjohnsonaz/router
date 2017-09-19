@@ -1,4 +1,4 @@
-export abstract class Router {
+export abstract class RouteListener {
     start(defer: boolean = false) {
         window.addEventListener('hashchange', this.handler);
         if (!defer) {

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import Router, { RouteHandler } from '../scripts/main';
+import { RouteHandler } from '../scripts/main';
 import { wait } from '../scripts/util/TestUtils';
 
 describe('RouteHandler', () => {

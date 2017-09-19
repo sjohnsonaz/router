@@ -1,6 +1,6 @@
-import { Router } from './Router';
+import { RouteListener } from './RouteListener';
 
-export default class RouterHandler extends Router {
+export default class RouterHandler extends RouteListener {
     routes: IRouteIndex = {};
     defaultRoutes: IRoute[] = [];
 
@@ -12,7 +12,6 @@ export default class RouterHandler extends Router {
     }
 
     route(hash: string) {
-        console.log('Route: "' + hash + '"');
         var routes = this.routes;
         var routesCalled = 0;
         for (var route in routes) {
