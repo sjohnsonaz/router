@@ -5,7 +5,7 @@ export interface IRouteCallback {
 export default class RouteListener {
     callback: IRouteCallback;
 
-    constructor(callback: IRouteCallback) {
+    constructor(callback?: IRouteCallback) {
         this.callback = callback;
     }
 
