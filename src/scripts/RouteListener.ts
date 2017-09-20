@@ -1,4 +1,14 @@
-export abstract class RouteListener {
+export interface IRouteCallback {
+    (hash: string): void | boolean;
+}
+
+export default class RouteListener {
+    callback: IRouteCallback;
+
+    constructor(callback: IRouteCallback) {
+        this.callback = callback;
+    }
+
     start(defer: boolean = false) {
         window.addEventListener('hashchange', this.handler);
         if (!defer) {
@@ -10,12 +20,10 @@ export abstract class RouteListener {
         window.removeEventListener('hashchange', this.handler);
     }
 
-    abstract route(hash: string): void | boolean;
-
     private handler = (event?: HashChangeEvent) => {
         let url = (event && event.newURL) ? event.newURL : window.location.href;
         let hash = this.getHash(url);
-        if (!this.route(hash) && event) {
+        if (this.callback && !this.callback(hash) && event) {
             event.preventDefault();
         }
     }

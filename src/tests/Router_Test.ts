@@ -7,9 +7,12 @@ describe('Route', () => {
     class SimpleRouter extends RouteListener {
         runCount: number = 0;
         currentRoute: string;
-        route(hash: string) {
-            this.runCount++;
-            this.currentRoute = hash;
+
+        constructor() {
+            super((hash: string) => {
+                this.runCount++;
+                this.currentRoute = hash;
+            });
         }
     }
 

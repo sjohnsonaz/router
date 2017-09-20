@@ -1,36 +1,35 @@
-import { RouteListener } from './RouteListener';
+import RouteListener from './RouteListener';
 
 export default class RouterHandler extends RouteListener {
     routes: IRouteIndex = {};
     defaultRoutes: IRoute[] = [];
 
     constructor(definitions?: IRouteDefinitionGroup) {
-        super();
-        if (definitions) {
-            this.addAll(definitions);
-        }
-    }
-
-    route(hash: string) {
-        var routes = this.routes;
-        var routesCalled = 0;
-        for (var route in routes) {
-            if (routes.hasOwnProperty(route)) {
-                var routeDef = routes[route];
-                var params = hash.match(routeDef.regex);
-                if (params) {
-                    routesCalled++;
-                    routeDef.enter.apply(routeDef.enter, params.slice(1));
-                    // TODO: Should this break after it has been called?
-                    //break;
+        super((hash: string) => {
+            var routes = this.routes;
+            var routesCalled = 0;
+            for (var route in routes) {
+                if (routes.hasOwnProperty(route)) {
+                    var routeDef = routes[route];
+                    var params = hash.match(routeDef.regex);
+                    if (params) {
+                        routesCalled++;
+                        routeDef.enter.apply(routeDef.enter, params.slice(1));
+                        // TODO: Should this break after it has been called?
+                        //break;
+                    }
                 }
             }
-        }
-        if (!routesCalled) {
-            for (var index = 0, length = this.defaultRoutes.length; index < length; index++) {
-                var defaultRouteDef = this.defaultRoutes[index];
-                defaultRouteDef.enter.apply(defaultRouteDef.enter);
+            if (!routesCalled) {
+                for (var index = 0, length = this.defaultRoutes.length; index < length; index++) {
+                    var defaultRouteDef = this.defaultRoutes[index];
+                    defaultRouteDef.enter.apply(defaultRouteDef.enter);
+                }
             }
+        });
+
+        if (definitions) {
+            this.addAll(definitions);
         }
     }
 
