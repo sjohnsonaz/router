@@ -63,4 +63,12 @@ export default class Router {
     setErrorRoute(route: IRoute) {
         this.errorRoute = route;
     }
+
+    start(defer: boolean = false) {
+        this.routeListener.start(defer);
+    }
+
+    stop() {
+        this.routeListener.stop();
+    }
 }
