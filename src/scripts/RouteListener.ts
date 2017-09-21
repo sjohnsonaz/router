@@ -1,6 +1,4 @@
-export interface IRouteCallback {
-    (hash: string): void | boolean;
-}
+import { IRouteCallback } from './interfaces/IRouteCallback';
 
 export default class RouteListener {
     callback: IRouteCallback;
