@@ -1,4 +1,5 @@
 import { IRoute } from './interfaces/IRoute';
+import { IRouteDefinitionGroup } from './interfaces/IRouteDefinitionGroup';
 
 const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 
@@ -32,5 +33,35 @@ export default class RouteBuilder {
             enter: enter,
             exit: exit
         };
+    }
+
+    static buildFromFunction(prefix: string, enter: Function, exit?: Function): IRoute {
+        var params = RouteBuilder.getParameterNames(enter);
+        params.unshift(prefix);
+        var definition = params.join('/:');
+        return RouteBuilder.build(definition, enter, exit);
+    }
+
+    static buildDefinitionGroup(prefix: string, definitionGroup: IRouteDefinitionGroup, routes?: IRoute[]) {
+        routes = routes || [];
+        for (var subPrefix in definitionGroup) {
+            if (definitionGroup.hasOwnProperty(subPrefix)) {
+                var definitions = definitionGroup[subPrefix];
+                var fullPrefix = prefix ? prefix + '/' + subPrefix : subPrefix;
+                if (definitions instanceof Array) {
+                    for (var index = 0, length = definitions.length; index < length; index++) {
+                        var definition = definitions[index];
+                        if (typeof definition === 'function') {
+                            routes.push(RouteBuilder.buildFromFunction(fullPrefix, definition as any));
+                        } else {
+                            RouteBuilder.buildDefinitionGroup(fullPrefix, definition as any, routes);
+                        }
+                    }
+                } else {
+                    routes.push(RouteBuilder.buildFromFunction(fullPrefix, definitions));
+                }
+            }
+        }
+        return routes;
     }
 }

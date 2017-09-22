@@ -71,4 +71,12 @@ export default class Router {
     stop() {
         this.routeListener.stop();
     }
+
+    static goToRoute(...args: string[]) {
+        window.location.hash = args.join('/');
+    }
+
+    static goToPage(href: string) {
+        window.location.href = href;
+    }
 }
