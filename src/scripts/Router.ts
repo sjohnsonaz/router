@@ -2,12 +2,16 @@ import { IRoute } from './interfaces/IRoute';
 //import { IRouteIndex } from './interfaces/IRouteIndex';
 
 import RouteListener from './RouteListener';
+import RouteBuilder from './RouteBuilder';
 
 export default class Router {
     routeListener: RouteListener;
     defaultRoute: IRoute;
     errorRoute: IRoute;
     routes: IRoute[] = [];//IRouteIndex = {};
+    routeHash: {
+        [index: string]: IRoute
+    } = {};
     currentRoute: IRoute;
 
     constructor() {
@@ -46,7 +50,21 @@ export default class Router {
     }
 
     addRoute(route: IRoute) {
+        let oldRoute = this.routeHash[route.name];
+        if (oldRoute) {
+            let index = this.routes.indexOf(oldRoute);
+            this.routes.splice(index, 1);
+        }
+        this.routeHash[route.name] = route;
         this.routes.push(route);
+    }
+
+    addRegex(definition: string | RegExp, enter: Function, exit?: Function) {
+        this.addRoute(RouteBuilder.build(definition, enter, exit));
+    }
+
+    addFunction(prefix: string, enter: Function, exit?: Function) {
+        this.addRoute(RouteBuilder.buildFromFunction(prefix, enter, exit));
     }
 
     removeRoute(route: IRoute) {
@@ -56,12 +74,12 @@ export default class Router {
         }
     }
 
-    setDefaultRoute(route: IRoute) {
-        this.defaultRoute = route;
+    setDefaultRoute(enter: Function, exit?: Function) {
+        this.defaultRoute = RouteBuilder.build('', enter, exit);;
     }
 
-    setErrorRoute(route: IRoute) {
-        this.errorRoute = route;
+    setErrorRoute(enter: Function, exit?: Function) {
+        this.errorRoute = RouteBuilder.build('', enter, exit);;
     }
 
     start(defer: boolean = false) {

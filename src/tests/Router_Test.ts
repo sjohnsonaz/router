@@ -17,21 +17,21 @@ describe('Router', () => {
         test1Count = 0;
         test2Count = 0;
     }
-    router.setDefaultRoute(RouteBuilder.build('', function () {
+    router.setDefaultRoute(function () {
         defaultCount++;
-    }));
-    router.setErrorRoute(RouteBuilder.build('', function () {
+    });
+    router.setErrorRoute(function () {
         defaultCount++;
-    }));
-    router.addRoute(RouteBuilder.build('test', function () {
+    });
+    router.addRegex('test', function () {
         test0Count++;
-    }));
-    router.addRoute(RouteBuilder.build('test/:id', function () {
+    });
+    router.addRegex('test/:id', function () {
         test1Count++;
-    }));
-    router.addRoute(RouteBuilder.build('test/:id/:name', function () {
+    });
+    router.addRegex('test/:id/:name', function () {
         test2Count++;
-    }));
+    });
 
     it('should run on listen', async () => {
         resetCounts();
