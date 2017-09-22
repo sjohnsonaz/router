@@ -77,8 +77,10 @@ describe('RouteBuilder.functionToRegex', () => {
         expect(match[3]).to.equal('a value');
     });
 });
-
+/*
 describe('RouteBuilder.build', () => {
-    it('should run on start', async () => {
+    it('should create a route', async () => {
+
     });
 });
+*/
