@@ -1,5 +1,4 @@
 import { IRoute } from './interfaces/IRoute';
-//import { IRouteIndex } from './interfaces/IRouteIndex';
 
 import RouteListener from './RouteListener';
 import RouteBuilder from './RouteBuilder';
