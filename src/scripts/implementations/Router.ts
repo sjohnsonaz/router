@@ -1,4 +1,5 @@
 import { IRoute } from '../interfaces/IRoute';
+import { IRouteGroup } from '../interfaces/IRouteGroup';
 
 import RouteListener from './RouteListener';
 import RouteBuilder from './RouteBuilder';
@@ -15,17 +16,9 @@ export default class Router {
 
     constructor() {
         this.routeListener = new RouteListener((hash: string) => {
-            // We have an old route
-            if (this.currentRoute) {
-                if (this.currentRoute.exit) {
-                    if (this.currentRoute.thisArg) {
-                        this.currentRoute.exit.call(this.currentRoute.thisArg, hash);
-                    } else {
-                        this.currentRoute.exit(hash);
-                    }
-                }
-                this.currentRoute = undefined;
-            }
+            let oldRoute = this.currentRoute;
+            this.currentRoute = undefined;
+
             let params: RegExpMatchArray;
             // We will try and find a route
             if (hash) {
@@ -46,6 +39,20 @@ export default class Router {
             if (!this.currentRoute) {
                 this.currentRoute = this.errorRoute;
             }
+
+            // We have an old route, the route has an exit, and we are changing routeGroups
+            if (oldRoute && oldRoute.exit && (
+                !oldRoute.routeGroup || (
+                    this.currentRoute && oldRoute.routeGroup !== this.currentRoute.routeGroup
+                )
+            )) {
+                if (oldRoute.thisArg) {
+                    oldRoute.exit.call(oldRoute.thisArg, hash);
+                } else {
+                    oldRoute.exit(hash);
+                }
+            }
+
             if (this.currentRoute && this.currentRoute.enter) {
                 this.currentRoute.enter.apply(this.currentRoute.thisArg || this.currentRoute.enter, params ? params.splice(1) : []);
             }
@@ -60,14 +67,28 @@ export default class Router {
         }
         this.routeHash[route.name] = route;
         this.routes.push(route);
+        return route;
     }
 
     addRegex(definition: string | RegExp, enter: Function, exit?: (newHash: string) => void) {
-        this.addRoute(RouteBuilder.build(definition, enter, exit));
+        return this.addRoute(RouteBuilder.build(definition, enter, exit));
     }
 
     addFunction(prefix: string, enter: Function, exit?: (newHash: string) => void) {
-        this.addRoute(RouteBuilder.buildFromFunction(prefix, enter, exit));
+        return this.addRoute(RouteBuilder.buildFromFunction(prefix, enter, exit));
+    }
+
+    addFunctionGroup(prefix: string, enterFunctions: Function[], exit?: (newHash: string) => void) {
+        let routeGroup: IRouteGroup = {
+            routes: []
+        };
+        if (enterFunctions) {
+            enterFunctions.forEach(enter => {
+                let route = this.addFunction(prefix, enter, exit);
+                route.routeGroup = routeGroup;
+                routeGroup.routes.push(route);
+            });
+        }
     }
 
     removeRoute(route: IRoute) {
