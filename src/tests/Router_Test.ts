@@ -104,7 +104,7 @@ describe('Router', () => {
         window.location.hash = 'test';
         await wait(0);
 
-        router.start(true);
+        router.start();
 
         await wait(0);
         window.location.hash = '';
@@ -115,7 +115,7 @@ describe('Router', () => {
 
         expect(defaultCount).to.equal(1);
         expect(errorCount).to.equal(0);
-        expect(test0Count).to.equal(0);
+        expect(test0Count).to.equal(1);
         expect(test0ExitCount).to.equal(1);
         expect(test1Count).to.equal(0);
         expect(test1ValueId).to.equal(undefined);
