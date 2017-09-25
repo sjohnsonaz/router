@@ -3,4 +3,5 @@ export interface IRoute {
     regex?: RegExp;
     enter: Function;
     exit: Function;
+    thisArg: any;
 }

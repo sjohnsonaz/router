@@ -1,4 +1,4 @@
-import { IRoute } from './interfaces/IRoute';
+import { IRoute } from '../interfaces/IRoute';
 
 import RouteListener from './RouteListener';
 import RouteBuilder from './RouteBuilder';
@@ -18,7 +18,11 @@ export default class Router {
             // We have an old route
             if (this.currentRoute) {
                 if (this.currentRoute.exit) {
-                    this.currentRoute.exit();
+                    if (this.currentRoute.thisArg) {
+                        this.currentRoute.exit.apply(this.currentRoute.thisArg);
+                    } else {
+                        this.currentRoute.exit();
+                    }
                 }
                 this.currentRoute = undefined;
             }
@@ -43,7 +47,7 @@ export default class Router {
                 this.currentRoute = this.errorRoute;
             }
             if (this.currentRoute && this.currentRoute.enter) {
-                this.currentRoute.enter.apply(this.currentRoute.enter, params ? params.splice(1) : []);
+                this.currentRoute.enter.apply(this.currentRoute.thisArg || this.currentRoute.enter, params ? params.splice(1) : []);
             }
         });
     }
@@ -87,6 +91,7 @@ export default class Router {
 
     stop() {
         this.routeListener.stop();
+        this.currentRoute = undefined;
     }
 
     static goToRoute(...args: string[]) {

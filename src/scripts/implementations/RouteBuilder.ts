@@ -1,5 +1,5 @@
-import { IRoute } from './interfaces/IRoute';
-import { IRouteDefinitionGroup } from './interfaces/IRouteDefinitionGroup';
+import { IRoute } from '../interfaces/IRoute';
+import { IRouteDefinitionGroup } from '../interfaces/IRouteDefinitionGroup';
 
 const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 
@@ -19,7 +19,7 @@ export default class RouteBuilder {
         return RouteBuilder.stringToRegex(params.join('/:'));
     }
 
-    static build(definition: string | RegExp, enter: Function, exit?: Function): IRoute {
+    static build(definition: string | RegExp, enter: Function, exit?: Function, thisArg?: any): IRoute {
         if (typeof definition === 'string') {
             var regex = RouteBuilder.stringToRegex(definition);
             var name = definition;
@@ -31,7 +31,8 @@ export default class RouteBuilder {
             name: name,
             regex: regex,
             enter: enter,
-            exit: exit
+            exit: exit,
+            thisArg: thisArg
         };
     }
 

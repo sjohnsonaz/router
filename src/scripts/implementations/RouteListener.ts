@@ -1,4 +1,4 @@
-import { IRouteCallback } from './interfaces/IRouteCallback';
+import { IRouteCallback } from '../interfaces/IRouteCallback';
 
 export default class RouteListener {
     callback: IRouteCallback;
