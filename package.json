@@ -1,6 +1,6 @@
 {
   "name": "@cubex/router",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A simple hash routing utility",
   "repository": "https://www.github.com/Cubex30/router.git",
   "license": "MIT",
