@@ -19,9 +19,9 @@ export default class Router {
             if (this.currentRoute) {
                 if (this.currentRoute.exit) {
                     if (this.currentRoute.thisArg) {
-                        this.currentRoute.exit.apply(this.currentRoute.thisArg);
+                        this.currentRoute.exit.call(this.currentRoute.thisArg, hash);
                     } else {
-                        this.currentRoute.exit();
+                        this.currentRoute.exit(hash);
                     }
                 }
                 this.currentRoute = undefined;
@@ -62,11 +62,11 @@ export default class Router {
         this.routes.push(route);
     }
 
-    addRegex(definition: string | RegExp, enter: Function, exit?: Function) {
+    addRegex(definition: string | RegExp, enter: Function, exit?: (newHash: string) => void) {
         this.addRoute(RouteBuilder.build(definition, enter, exit));
     }
 
-    addFunction(prefix: string, enter: Function, exit?: Function) {
+    addFunction(prefix: string, enter: Function, exit?: (newHash: string) => void) {
         this.addRoute(RouteBuilder.buildFromFunction(prefix, enter, exit));
     }
 
@@ -77,12 +77,12 @@ export default class Router {
         }
     }
 
-    setDefaultRoute(enter: Function, exit?: Function) {
-        this.defaultRoute = RouteBuilder.build('', enter, exit);;
+    setDefaultRoute(enter: Function, exit?: (newHash: string) => void) {
+        this.defaultRoute = RouteBuilder.build('', enter, exit);
     }
 
-    setErrorRoute(enter: Function, exit?: Function) {
-        this.errorRoute = RouteBuilder.build('', enter, exit);;
+    setErrorRoute(enter: Function, exit?: (newHash: string) => void) {
+        this.errorRoute = RouteBuilder.build('', enter, exit);
     }
 
     start(defer: boolean = false) {

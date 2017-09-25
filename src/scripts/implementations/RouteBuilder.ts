@@ -19,7 +19,7 @@ export default class RouteBuilder {
         return RouteBuilder.stringToRegex(params.join('/:'));
     }
 
-    static build(definition: string | RegExp, enter: Function, exit?: Function, thisArg?: any): IRoute {
+    static build(definition: string | RegExp, enter: Function, exit?: (newHash: string) => void, thisArg?: any): IRoute {
         if (typeof definition === 'string') {
             var regex = RouteBuilder.stringToRegex(definition);
             var name = definition;
@@ -36,7 +36,7 @@ export default class RouteBuilder {
         };
     }
 
-    static buildFromFunction(prefix: string, enter: Function, exit?: Function): IRoute {
+    static buildFromFunction(prefix: string, enter: Function, exit?: (newHash: string) => void): IRoute {
         var params = RouteBuilder.getParameterNames(enter);
         params.unshift(prefix);
         var definition = params.join('/:');

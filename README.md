@@ -28,8 +28,8 @@ class Application {
          */
         this.router.addRegex('test', function () {
             console.log('Route: Test');
-        }, function() {
-            console.log('Route Exit: Test');
+        }, function(newHash: string) {
+            console.log('Route Exit: Test, New Hash: ' + newHash);
         });
 
         /*

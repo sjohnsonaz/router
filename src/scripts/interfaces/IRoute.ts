@@ -2,6 +2,6 @@ export interface IRoute {
     name?: string;
     regex?: RegExp;
     enter: Function;
-    exit: Function;
+    exit: (newHash: string) => void;
     thisArg: any;
 }
