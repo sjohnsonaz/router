@@ -14,6 +14,7 @@ export default class Router {
     } = {};
     currentRoute: IRoute;
     previousRoute: IRoute;
+    changedRouteGroup: boolean = false;
 
     constructor() {
         this.routeListener = new RouteListener((hash: string) => {
@@ -40,6 +41,10 @@ export default class Router {
             if (!this.currentRoute) {
                 this.currentRoute = this.errorRoute;
             }
+
+            this.changedRouteGroup = !this.previousRoute ||
+                !this.previousRoute.routeGroup ||
+                this.previousRoute.routeGroup !== this.currentRoute.routeGroup;
 
             // We have an old route, the route has an exit, and we are changing routeGroups
             if (this.previousRoute && this.previousRoute.exit && (
