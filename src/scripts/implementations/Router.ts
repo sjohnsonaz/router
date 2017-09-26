@@ -13,10 +13,11 @@ export default class Router {
         [index: string]: IRoute
     } = {};
     currentRoute: IRoute;
+    previousRoute: IRoute;
 
     constructor() {
         this.routeListener = new RouteListener((hash: string) => {
-            let oldRoute = this.currentRoute;
+            this.previousRoute = this.currentRoute;
             this.currentRoute = undefined;
 
             let params: RegExpMatchArray;
@@ -41,15 +42,15 @@ export default class Router {
             }
 
             // We have an old route, the route has an exit, and we are changing routeGroups
-            if (oldRoute && oldRoute.exit && (
-                !oldRoute.routeGroup || (
-                    this.currentRoute && oldRoute.routeGroup !== this.currentRoute.routeGroup
+            if (this.previousRoute && this.previousRoute.exit && (
+                !this.previousRoute.routeGroup || (
+                    this.currentRoute && this.previousRoute.routeGroup !== this.currentRoute.routeGroup
                 )
             )) {
-                if (oldRoute.thisArg) {
-                    oldRoute.exit.call(oldRoute.thisArg, hash);
+                if (this.previousRoute.thisArg) {
+                    this.previousRoute.exit.call(this.previousRoute.thisArg, hash);
                 } else {
-                    oldRoute.exit(hash);
+                    this.previousRoute.exit(hash);
                 }
             }
 
