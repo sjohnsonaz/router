@@ -210,3 +210,60 @@ describe('Router', () => {
         expect(test2ValueName).to.equal('value');
     });
 });
+
+describe('Router.addFunctionGroup', () => {
+    let router = new Router();
+    let route0Count = 0;
+    let route0GroupChange = false
+    let route1Count = 0;
+    let route1GroupChange = false
+    let exitCount = 0;
+    let exitGroupChange = false
+    function resetCounts() {
+        route0Count = 0;
+        route0GroupChange = false
+        route1Count = 0;
+        route1GroupChange = false
+        exitCount = 0;
+        exitGroupChange = false
+    }
+    router.addFunctionGroup('test', [
+        () => {
+            route0Count++;
+            route0GroupChange = router.changedRouteGroup;
+        }, (id) => {
+            route1Count++;
+            route1GroupChange = router.changedRouteGroup;
+        }
+    ], () => {
+        exitCount++;
+        exitGroupChange = router.changedRouteGroup;
+    });
+    it('should add multiple Routes into a RouteGroup', async () => {
+        resetCounts();
+        // Reset hash and wait for events to clear
+        window.location.hash = '';
+        await wait(0);
+        router.start(true);
+
+        await wait(0);
+        window.location.hash = 'test';
+
+        await wait(0);
+        window.location.hash = 'test/1';
+
+        await wait(0);
+        window.location.hash = '';
+
+        // Wait for events to clear and stop
+        await wait(0);
+        router.stop();
+
+        expect(route0Count).to.equal(1);
+        expect(route0GroupChange).to.equal(true);
+        expect(route1Count).to.equal(1);
+        expect(route1GroupChange).to.equal(false);
+        expect(exitCount).to.equal(1);
+        expect(exitGroupChange).to.equal(true);
+    });
+});

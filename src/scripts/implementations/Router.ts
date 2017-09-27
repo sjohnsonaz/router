@@ -48,11 +48,15 @@ export default class Router {
                 this.previousRoute.routeGroup !== this.currentRoute.routeGroup;
 
             // We have an old route, the route has an exit, and we are changing routeGroups
-            if (this.previousRoute && this.previousRoute.exit && (
-                !this.previousRoute.routeGroup || (
-                    this.currentRoute && this.previousRoute.routeGroup !== this.currentRoute.routeGroup
+            if (this.previousRoute && this.previousRoute.exit &&
+                (
+                    !this.previousRoute.routeGroup ||
+                    !this.currentRoute ||
+                    (
+                        this.currentRoute && this.currentRoute.routeGroup !== this.previousRoute.routeGroup
+                    )
                 )
-            )) {
+            ) {
                 if (this.previousRoute.thisArg) {
                     this.previousRoute.exit.call(this.previousRoute.thisArg, hash);
                 } else {
