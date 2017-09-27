@@ -178,6 +178,34 @@ describe('Router', () => {
         expect(test2ValueName).to.equal(undefined);
     });
 
+    it('should handle default to error', async () => {
+        resetCounts();
+
+        // Reset hash and wait for events to clear
+        window.location.hash = '';
+        await wait(0);
+
+        router.start(true);
+
+        await wait(0);
+        window.location.hash = 'abcd';
+
+        // Wait for events to clear and stop
+        await wait(0);
+        router.stop();
+
+        expect(defaultCount).to.equal(0);
+        expect(errorCount).to.equal(1);
+        expect(test0Count).to.equal(0);
+        expect(test0ExitCount).to.equal(0);
+        expect(test1Count).to.equal(0);
+        expect(test1ValueId).to.equal(undefined);
+        expect(test2Count).to.equal(0);
+        expect(test2ValueId).to.equal(undefined);
+        expect(test2ValueName).to.equal(undefined);
+    });
+
+
     it('should handle parameters', async () => {
         resetCounts();
 
