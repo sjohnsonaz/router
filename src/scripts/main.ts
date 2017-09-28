@@ -5,4 +5,4 @@ export { IRouteCallback } from './interfaces/IRouteCallback';
 export { IRouteDefinitionGroup } from './interfaces/IRouteDefinitionGroup';
 
 export { default as RouteListener } from './implementations/RouteListener';
-export { default as RouteBuilder } from './implementations/RouteBuilder';
+export { default as RouteUtils } from './implementations/RouteUtils';

@@ -2,7 +2,7 @@ import { IRoute } from '../interfaces/IRoute';
 import { IRouteGroup } from '../interfaces/IRouteGroup';
 
 import RouteListener from './RouteListener';
-import RouteBuilder from './RouteBuilder';
+import RouteUtils from './RouteUtils';
 
 export default class Router {
     routeListener: RouteListener;
@@ -82,11 +82,11 @@ export default class Router {
     }
 
     addRegex(definition: string | RegExp, enter: Function, exit?: (newHash: string) => void) {
-        return this.addRoute(RouteBuilder.build(definition, enter, exit));
+        return this.addRoute(RouteUtils.build(definition, enter, exit));
     }
 
     addFunction(prefix: string, enter: Function, exit?: (newHash: string) => void) {
-        return this.addRoute(RouteBuilder.buildFromFunction(prefix, enter, exit));
+        return this.addRoute(RouteUtils.buildFromFunction(prefix, enter, exit));
     }
 
     addFunctionGroup(prefix: string, enterFunctions: Function[], exit?: (newHash: string) => void) {
@@ -110,11 +110,11 @@ export default class Router {
     }
 
     setDefaultRoute(enter: Function, exit?: (newHash: string) => void) {
-        this.defaultRoute = RouteBuilder.build('', enter, exit);
+        this.defaultRoute = RouteUtils.build('', enter, exit);
     }
 
     setErrorRoute(enter: Function, exit?: (newHash: string) => void) {
-        this.errorRoute = RouteBuilder.build('', enter, exit);
+        this.errorRoute = RouteUtils.build('', enter, exit);
     }
 
     start(defer: boolean = false) {

@@ -3,7 +3,7 @@ import { IRouteDefinitionGroup } from '../interfaces/IRouteDefinitionGroup';
 
 const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 
-export default class RouteBuilder {
+export default class RouteUtils {
     static getParameterNames(functionHandle: Function) {
         var definition = functionHandle.toString().replace(STRIP_COMMENTS, '');
         return definition.slice(definition.indexOf('(') + 1, definition.indexOf(')')).match(/([^\s,]+)/g) || [];
@@ -14,14 +14,14 @@ export default class RouteBuilder {
     }
 
     static functionToRegex(prefix: string, enter: Function): RegExp {
-        var params = RouteBuilder.getParameterNames(enter);
+        var params = RouteUtils.getParameterNames(enter);
         params.unshift(prefix);
-        return RouteBuilder.stringToRegex(params.join('/:'));
+        return RouteUtils.stringToRegex(params.join('/:'));
     }
 
     static build(definition: string | RegExp, enter: Function, exit?: (newHash: string) => void, thisArg?: any): IRoute {
         if (typeof definition === 'string') {
-            var regex = RouteBuilder.stringToRegex(definition);
+            var regex = RouteUtils.stringToRegex(definition);
             var name = definition;
         } else {
             var regex = definition;
@@ -37,10 +37,10 @@ export default class RouteBuilder {
     }
 
     static buildFromFunction(prefix: string, enter: Function, exit?: (newHash: string) => void): IRoute {
-        var params = RouteBuilder.getParameterNames(enter);
+        var params = RouteUtils.getParameterNames(enter);
         params.unshift(prefix);
         var definition = params.join('/:');
-        return RouteBuilder.build(definition, enter, exit);
+        return RouteUtils.build(definition, enter, exit);
     }
 
     static buildDefinitionGroup(prefix: string, definitionGroup: IRouteDefinitionGroup, routes?: IRoute[]) {
@@ -53,13 +53,13 @@ export default class RouteBuilder {
                     for (var index = 0, length = definitions.length; index < length; index++) {
                         var definition = definitions[index];
                         if (typeof definition === 'function') {
-                            routes.push(RouteBuilder.buildFromFunction(fullPrefix, definition as any));
+                            routes.push(RouteUtils.buildFromFunction(fullPrefix, definition as any));
                         } else {
-                            RouteBuilder.buildDefinitionGroup(fullPrefix, definition as any, routes);
+                            RouteUtils.buildDefinitionGroup(fullPrefix, definition as any, routes);
                         }
                     }
                 } else {
-                    routes.push(RouteBuilder.buildFromFunction(fullPrefix, definitions));
+                    routes.push(RouteUtils.buildFromFunction(fullPrefix, definitions));
                 }
             }
         }
