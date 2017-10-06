@@ -15,6 +15,7 @@ export default class Router {
     currentRoute: IRoute;
     previousRoute: IRoute;
     changedRouteGroup: boolean = false;
+    onchange: (hash: string, currentRoute: IRoute, previosuRoute: IRoute) => void;
 
     constructor() {
         this.routeListener = new RouteListener((hash: string) => {
@@ -67,6 +68,10 @@ export default class Router {
             if (this.currentRoute && this.currentRoute.enter) {
                 this.currentRoute.enter.apply(this.currentRoute.thisArg || this.currentRoute.enter, params ? params.splice(1) : []);
             }
+
+            if (this.onchange) {
+                this.onchange(hash, this.currentRoute, this.previousRoute);
+            }
         });
     }
 
@@ -115,6 +120,10 @@ export default class Router {
 
     setErrorRoute(enter: Function, exit?: (newHash: string) => void) {
         this.errorRoute = RouteUtils.build('', enter, exit);
+    }
+
+    setOnChange(onchange: (hash: string, currentRoute: IRoute, previosuRoute: IRoute) => void) {
+        this.onchange = onchange;
     }
 
     start(defer: boolean = false) {
