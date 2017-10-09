@@ -1,6 +1,6 @@
 # Cubex Router
 
-[![Build Status](https://travis-ci.org/%40cubex%2Frouter.svg?branch=master)](https://travis-ci.org/%40cubex%2Frouter) [![npm version](https://badge.fury.io/js/%40cubex%2Frouter.svg)](https://badge.fury.io/js/%40cubex%2Frouter)
+[![Build Status](https://travis-ci.org/Cubex30/router.svg?branch=master)](https://travis-ci.org/Cubex30/router) [![npm version](https://badge.fury.io/js/%40cubex%2Frouter.svg)](https://badge.fury.io/js/%40cubex%2Frouter)
 
 ```` TypeScript
 import Router from '@cubex/router';
