@@ -5,6 +5,7 @@ import { wait } from '../scripts/util/TestUtils';
 
 describe('Router', () => {
     let router = new Router();
+    let changeCount = 0;
     let defaultCount = 0;
     let errorCount = 0;
     let test0Count = 0;
@@ -15,6 +16,7 @@ describe('Router', () => {
     let test2ValueId = undefined;
     let test2ValueName = undefined;
     function resetCounts() {
+        changeCount = 0;
         defaultCount = 0;
         errorCount = 0;
         test0Count = 0;
@@ -25,6 +27,9 @@ describe('Router', () => {
         test2ValueId = undefined;
         test2ValueName = undefined;
     }
+    router.setOnChange(function () {
+        changeCount++;
+    });
     router.setDefaultRoute(function () {
         defaultCount++;
     });
@@ -59,6 +64,7 @@ describe('Router', () => {
         await wait(0);
         router.stop();
 
+        expect(changeCount).to.equal(1);
         expect(defaultCount).to.equal(1);
         expect(errorCount).to.equal(0);
         expect(test0Count).to.equal(0);
@@ -86,6 +92,7 @@ describe('Router', () => {
         await wait(0);
         router.stop();
 
+        expect(changeCount).to.equal(2);
         expect(defaultCount).to.equal(1);
         expect(errorCount).to.equal(0);
         expect(test0Count).to.equal(1);
@@ -113,6 +120,7 @@ describe('Router', () => {
         await wait(0);
         router.stop();
 
+        expect(changeCount).to.equal(2);
         expect(defaultCount).to.equal(1);
         expect(errorCount).to.equal(0);
         expect(test0Count).to.equal(1);
@@ -140,6 +148,7 @@ describe('Router', () => {
         await wait(0);
         router.stop();
 
+        expect(changeCount).to.equal(0);
         expect(defaultCount).to.equal(0);
         expect(errorCount).to.equal(0);
         expect(test0Count).to.equal(0);
@@ -167,6 +176,7 @@ describe('Router', () => {
         await wait(0);
         router.stop();
 
+        expect(changeCount).to.equal(1);
         expect(defaultCount).to.equal(0);
         expect(errorCount).to.equal(0);
         expect(test0Count).to.equal(1);
@@ -194,6 +204,7 @@ describe('Router', () => {
         await wait(0);
         router.stop();
 
+        expect(changeCount).to.equal(1);
         expect(defaultCount).to.equal(0);
         expect(errorCount).to.equal(1);
         expect(test0Count).to.equal(0);
@@ -227,6 +238,7 @@ describe('Router', () => {
         await wait(0);
         router.stop();
 
+        expect(changeCount).to.equal(3);
         expect(defaultCount).to.equal(0);
         expect(errorCount).to.equal(0);
         expect(test0Count).to.equal(1);
