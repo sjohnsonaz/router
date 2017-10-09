@@ -105,6 +105,7 @@ export default class Router {
                 routeGroup.routes.push(route);
             });
         }
+        return routeGroup;
     }
 
     removeRoute(route: IRoute) {
