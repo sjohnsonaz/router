@@ -15,62 +15,72 @@ export default class Router {
     currentRoute: IRoute;
     previousRoute: IRoute;
     changedRouteGroup: boolean = false;
-    onchange: (hash: string, currentRoute: IRoute, previosuRoute: IRoute) => void;
+    beforeChange: (hash: string, previousRoute: IRoute) => string | false;
+    afterChange: (hash: string, currentRoute: IRoute, previousRoute: IRoute) => void;
 
     constructor() {
         this.routeListener = new RouteListener((hash: string) => {
-            this.previousRoute = this.currentRoute;
-            this.currentRoute = undefined;
+            let result = undefined;
+            if (this.beforeChange) {
+                result = this.beforeChange(hash, this.currentRoute);
+            }
+            if (typeof result === 'string') {
+                hash = result;
+            }
+            if (result !== false) {
+                this.previousRoute = this.currentRoute;
+                this.currentRoute = undefined;
 
-            let params: RegExpMatchArray;
-            // We will try and find a route
-            if (hash) {
-                if (this.routes) {
-                    for (let index = 0, length = this.routes.length; index < length; index++) {
-                        let route = this.routes[index];
-                        params = hash.match(route.regex);
-                        if (params) {
-                            this.currentRoute = route;
-                            break;
+                let params: RegExpMatchArray;
+                // We will try and find a route
+                if (hash) {
+                    if (this.routes) {
+                        for (let index = 0, length = this.routes.length; index < length; index++) {
+                            let route = this.routes[index];
+                            params = hash.match(route.regex);
+                            if (params) {
+                                this.currentRoute = route;
+                                break;
+                            }
                         }
                     }
+                } else {
+                    // We must use the default route
+                    this.currentRoute = this.defaultRoute;
                 }
-            } else {
-                // We must use the default route
-                this.currentRoute = this.defaultRoute;
-            }
-            if (!this.currentRoute) {
-                this.currentRoute = this.errorRoute;
-            }
+                if (!this.currentRoute) {
+                    this.currentRoute = this.errorRoute;
+                }
 
-            this.changedRouteGroup = !this.previousRoute ||
-                !this.previousRoute.routeGroup ||
-                !this.currentRoute ||
-                this.previousRoute.routeGroup !== this.currentRoute.routeGroup;
-
-            // We have an old route, the route has an exit, and we are changing routeGroups
-            if (this.previousRoute && this.previousRoute.exit &&
-                (
+                this.changedRouteGroup = !this.previousRoute ||
                     !this.previousRoute.routeGroup ||
                     !this.currentRoute ||
+                    this.previousRoute.routeGroup !== this.currentRoute.routeGroup;
+
+                // We have an old route, the route has an exit, and we are changing routeGroups
+                if (this.previousRoute && this.previousRoute.exit &&
                     (
-                        this.currentRoute && this.currentRoute.routeGroup !== this.previousRoute.routeGroup
+                        !this.previousRoute.routeGroup ||
+                        !this.currentRoute ||
+                        (
+                            this.currentRoute && this.currentRoute.routeGroup !== this.previousRoute.routeGroup
+                        )
                     )
-                )
-            ) {
-                if (this.previousRoute.thisArg) {
-                    this.previousRoute.exit.call(this.previousRoute.thisArg, hash);
-                } else {
-                    this.previousRoute.exit(hash);
+                ) {
+                    if (this.previousRoute.thisArg) {
+                        this.previousRoute.exit.call(this.previousRoute.thisArg, hash);
+                    } else {
+                        this.previousRoute.exit(hash);
+                    }
                 }
-            }
 
-            if (this.currentRoute && this.currentRoute.enter) {
-                this.currentRoute.enter.apply(this.currentRoute.thisArg || this.currentRoute.enter, params ? params.splice(1) : []);
-            }
+                if (this.currentRoute && this.currentRoute.enter) {
+                    this.currentRoute.enter.apply(this.currentRoute.thisArg || this.currentRoute.enter, params ? params.splice(1) : []);
+                }
 
-            if (this.onchange) {
-                this.onchange(hash, this.currentRoute, this.previousRoute);
+                if (this.afterChange) {
+                    this.afterChange(hash, this.currentRoute, this.previousRoute);
+                }
             }
         });
     }
@@ -123,8 +133,12 @@ export default class Router {
         this.errorRoute = RouteUtils.build('', enter, exit);
     }
 
-    setOnChange(onchange: (hash: string, currentRoute: IRoute, previosuRoute: IRoute) => void) {
-        this.onchange = onchange;
+    setBeforeChange(beforeChange: (hash: string, previousRoute: IRoute) => string | false) {
+        this.beforeChange = beforeChange;
+    }
+
+    setAfterChange(afterChange: (hash: string, currentRoute: IRoute, previousRoute: IRoute) => void) {
+        this.afterChange = afterChange;
     }
 
     start(defer: boolean = false) {

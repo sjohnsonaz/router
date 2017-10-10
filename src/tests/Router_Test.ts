@@ -27,7 +27,7 @@ describe('Router', () => {
         test2ValueId = undefined;
         test2ValueName = undefined;
     }
-    router.setOnChange(function () {
+    router.setAfterChange(function () {
         changeCount++;
     });
     router.setDefaultRoute(function () {
@@ -248,6 +248,89 @@ describe('Router', () => {
         expect(test2Count).to.equal(1);
         expect(test2ValueId).to.equal('2');
         expect(test2ValueName).to.equal('value');
+    });
+});
+
+describe('Router.beforeChange', () => {
+    let router = new Router();
+    let testCount = 0;
+    let otherCount = 0;
+    function resetCounts() {
+        testCount = 0;
+        otherCount = 0;
+    }
+    router.addFunction('test', () => {
+        testCount++;
+    });
+    router.addFunction('other', () => {
+        otherCount++;
+    });
+    router.setBeforeChange((hash) => {
+        if (hash === 'other') {
+            return 'test';
+        } else {
+            return undefined;
+        }
+    });
+
+    it('should not cancel on return undefined', async () => {
+        resetCounts();
+
+        // Reset hash and wait for events to clear
+        window.location.hash = '';
+        await wait(0);
+
+        router.start(true);
+
+        await wait(0);
+        window.location.hash = 'test';
+
+        // Wait for events to clear and stop
+        await wait(0);
+        router.stop();
+
+        expect(testCount).to.equal(1);
+        expect(otherCount).to.equal(0);
+    });
+
+    it('should cancel on return false', async () => {
+        resetCounts();
+
+        // Reset hash and wait for events to clear
+        window.location.hash = '';
+        await wait(0);
+
+        router.start(true);
+
+        await wait(0);
+        window.location.hash = 'other';
+
+        // Wait for events to clear and stop
+        await wait(0);
+        router.stop();
+
+        expect(testCount).to.equal(1);
+        expect(otherCount).to.equal(0);
+    });
+
+    it('should change hash on return string', async () => {
+        resetCounts();
+
+        // Reset hash and wait for events to clear
+        window.location.hash = '';
+        await wait(0);
+
+        router.start(true);
+
+        await wait(0);
+        window.location.hash = 'another';
+
+        // Wait for events to clear and stop
+        await wait(0);
+        router.stop();
+
+        expect(testCount).to.equal(0);
+        expect(otherCount).to.equal(0);
     });
 });
 
