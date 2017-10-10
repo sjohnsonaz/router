@@ -2,7 +2,7 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        'main': './src/scripts/main.ts'
+        'router': './src/scripts/router.ts'
     },
     output: {
         filename: './dist/bundle/[name].min.js',

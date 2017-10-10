@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { RouteUtils } from '../scripts/main';
+import { RouteUtils } from '../scripts/router';
 import { wait } from '../scripts/util/TestUtils';
 
 describe('RouteUtils.getParameterNames', () => {

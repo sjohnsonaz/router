@@ -1,6 +1,6 @@
 module.exports = {
     entry: {
-        'main': './src/scripts/main.ts',
+        'router': './src/scripts/router.ts',
         'mochaRunner': './src/mocha/BrowserRunner.ts'
     },
     output: {
