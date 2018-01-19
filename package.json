@@ -10,8 +10,9 @@
   "scripts": {
     "start": "node ./dist/scripts/router.js",
     "build": "tsc",
-    "prepublishOnly": "tsc --declaration",
+    "prepublishOnly": "rimraf ./dist && tsc --declaration",
     "test": "tsc && node src/mocha/NodeRunner.js",
+    "clean": "rimraf ./dist",
     "min": "webpack --config webpack.config.js --progress",
     "dev": "webpack --config webpack.dev.config.js --progress",
     "watch": "webpack --config webpack.dev.config.js --watch --progress",
@@ -29,6 +30,7 @@
     "es6-shim": "0.35.3",
     "jsdom": "11.2.0",
     "mocha": "3.5.3",
+    "rimraf": "^2.6.2",
     "ts-loader": "2.3.7",
     "typescript": "2.5.2",
     "webpack": "3.6.0"
