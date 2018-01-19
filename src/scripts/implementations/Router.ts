@@ -15,14 +15,15 @@ export default class Router {
     currentRoute: IRoute;
     previousRoute: IRoute;
     changedRouteGroup: boolean = false;
-    beforeChange: (hash: string, previousRoute: IRoute) => string | false;
+    beforeMatch: (hash: string, previousRoute: IRoute) => string | false;
+    beforeChange: (hash: string, currentRoute: IRoute, previousRoute: IRoute) => void;
     afterChange: (hash: string, currentRoute: IRoute, previousRoute: IRoute) => void;
 
     constructor() {
         this.routeListener = new RouteListener((hash: string) => {
             let result = undefined;
-            if (this.beforeChange) {
-                result = this.beforeChange(hash, this.currentRoute);
+            if (this.beforeMatch) {
+                result = this.beforeMatch(hash, this.currentRoute);
             }
             if (typeof result === 'string') {
                 hash = result;
@@ -56,6 +57,10 @@ export default class Router {
                     !this.previousRoute.routeGroup ||
                     !this.currentRoute ||
                     this.previousRoute.routeGroup !== this.currentRoute.routeGroup;
+
+                if (this.beforeChange) {
+                    this.beforeChange(hash, this.currentRoute, this.previousRoute);
+                }
 
                 // We have an old route, the route has an exit, and we are changing routeGroups
                 if (this.previousRoute && this.previousRoute.exit &&
@@ -132,8 +137,11 @@ export default class Router {
     setErrorRoute(enter: Function, exit?: (newHash: string) => void) {
         this.errorRoute = RouteUtils.build('', enter, exit);
     }
+    setBeforeMatch(beforeMatch: (hash: string, previousRoute: IRoute) => string | false) {
+        this.beforeMatch = beforeMatch;
+    }
 
-    setBeforeChange(beforeChange: (hash: string, previousRoute: IRoute) => string | false) {
+    setBeforeChange(beforeChange: (hash: string, currentRoute: IRoute, previousRoute: IRoute) => void) {
         this.beforeChange = beforeChange;
     }
 

@@ -251,7 +251,7 @@ describe('Router', () => {
     });
 });
 
-describe('Router.beforeChange', () => {
+describe('Router.beforeMatch', () => {
     let router = new Router();
     let testCount = 0;
     let otherCount = 0;
@@ -265,7 +265,7 @@ describe('Router.beforeChange', () => {
     router.addFunction('other', () => {
         otherCount++;
     });
-    router.setBeforeChange((hash) => {
+    router.setBeforeMatch((hash) => {
         if (hash === 'other') {
             return 'test';
         } else {
