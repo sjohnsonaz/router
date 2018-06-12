@@ -1,11 +1,12 @@
 var webpack = require('webpack');
 
 module.exports = {
+    mode: 'production',
     entry: {
         'router': './src/scripts/router.ts'
     },
     output: {
-        filename: './dist/bundle/[name].min.js',
+        filename: './bundle/[name].min.js',
         libraryTarget: 'var',
         library: '[name]'
     },
@@ -17,12 +18,9 @@ module.exports = {
         chai: 'chai'
     },
     module: {
-        loaders: [{
+        rules: [{
             test: /\.tsx?$/,
-            loader: 'ts-loader'
+            use: ['ts-loader']
         }]
-    },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin()
-    ]
+    }
 };
