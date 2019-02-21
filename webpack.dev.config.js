@@ -9,7 +9,6 @@ module.exports = {
         libraryTarget: 'var',
         library: '[name]'
     },
-    devtool: 'source-map',
     resolve: {
         extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js']
     },
