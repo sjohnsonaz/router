@@ -216,7 +216,6 @@ describe('Router', () => {
         expect(test2ValueName).to.equal(undefined);
     });
 
-
     it('should handle parameters', async () => {
         resetCounts();
 
@@ -232,7 +231,7 @@ describe('Router', () => {
         window.location.hash = 'test/1';
 
         await wait(0);
-        window.location.hash = 'test/2/value';
+        window.location.hash = 'test/2/value with spaces';
 
         // Wait for events to clear and stop
         await wait(0);
@@ -247,7 +246,7 @@ describe('Router', () => {
         expect(test1ValueId).to.equal('1');
         expect(test2Count).to.equal(1);
         expect(test2ValueId).to.equal('2');
-        expect(test2ValueName).to.equal('value');
+        expect(test2ValueName).to.equal('value with spaces');
     });
 });
 

@@ -80,7 +80,8 @@ export default class Router {
                 }
 
                 if (this.currentRoute && this.currentRoute.enter) {
-                    this.currentRoute.enter.apply(this.currentRoute.thisArg || this.currentRoute.enter, params ? params.splice(1) : []);
+                    params = params ? params.splice(1).map(param => decodeURIComponent(param)) : [];
+                    this.currentRoute.enter.apply(this.currentRoute.thisArg || this.currentRoute.enter, params);
                 }
 
                 if (this.afterChange) {
@@ -137,6 +138,7 @@ export default class Router {
     setErrorRoute(enter: Function, exit?: (newHash: string) => void) {
         this.errorRoute = RouteUtils.build('', enter, exit);
     }
+
     setBeforeMatch(beforeMatch: (hash: string, previousRoute: IRoute) => string | false) {
         this.beforeMatch = beforeMatch;
     }
