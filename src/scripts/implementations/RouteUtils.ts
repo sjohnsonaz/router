@@ -22,7 +22,7 @@ export default class RouteUtils {
     }
 
     static stringToRegex(definition: string): RegExp {
-        return new RegExp('^' + definition.replace(/\//g, '\\/').replace(/:(\w*)/g, '([\^S\^\/]*)') + '$');
+        return new RegExp('^' + definition.replace(/\//g, '\\/').replace(/\?:(\w*)/g, '\\?(.*)').replace(/:(\w*)/g, '([^\/\?]*)') + '$');
     }
 
     static functionToRegex(prefix: string, enter: Function): RegExp {

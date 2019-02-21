@@ -49,6 +49,17 @@ describe('RouteUtils.stringToRegex', () => {
         expect(match[2]).to.equal('thing');
         expect(match[3]).to.equal('a value');
     });
+
+    it('should return a regex with many parameters for a string with many parameters and a query', () => {
+        let regex = RouteUtils.stringToRegex('test/:id/:name/:value?:query');
+        let match = 'test/1/thing/a value?and stuff'.match(regex);
+        expect(match).to.be.instanceof(Array);
+        expect(match.length).to.equal(5);
+        expect(match[1]).to.equal('1');
+        expect(match[2]).to.equal('thing');
+        expect(match[3]).to.equal('a value');
+        expect(match[4]).to.equal('and stuff');
+    });
 });
 
 describe('RouteUtils.functionToRegex', () => {
