@@ -77,4 +77,47 @@ export default class RouteUtils {
         }
         return routes;
     }
+
+    static createUrl(...parts: any[]) {
+        var joined = parts.join('/');
+        return RouteUtil.normalize(joined);
+    }
+
+    static normalize(str: string) {
+
+        // make sure protocol is followed by two slashes
+        str = str.replace(/:\//g, '://');
+
+        // remove consecutive slashes
+        str = str.replace(/([^:\s])\/+/g, '$1/');
+
+        // remove trailing slash before parameters or hash
+        str = str.replace(/\/(\?|&|#[^!])/g, '$1');
+
+        // replace ? in parameters with &
+        str = str.replace(/(\?.+)\?/g, '$1&');
+
+        return str;
+    }
+
+    static objectToQueryString(obj: Object) {
+        var values = [];
+        for (var name in obj) {
+            if (obj.hasOwnProperty(name)) {
+                var value = obj[name];
+                if (value instanceof Array) {
+                    for (var index = 0, length = value.length; index < length; index++) {
+                        values.push(name + '[]=' + encodeURIComponent(value[index]));
+                    }
+                } else if (value !== undefined) {
+                    values.push(name + '=' + encodeURIComponent(value));
+                }
+            }
+        }
+        return values.join('&');
+    }
+
+    static createRoute(...args: string[]) {
+        return args.map(value => encodeURIComponent(value)).join('/');
+    }
 }

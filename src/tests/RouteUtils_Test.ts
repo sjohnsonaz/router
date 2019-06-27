@@ -60,6 +60,26 @@ describe('RouteUtils.stringToRegex', () => {
         expect(match[3]).to.equal('a value');
         expect(match[4]).to.equal('and stuff');
     });
+
+    it('should return a regex with many parameters for an encoded string with many parameters and a query', () => {
+        let regex = RouteUtils.stringToRegex('test/:id/:name/:value?:query');
+        let complexValue0 = 'a complex # value / with ? invalid characters';
+        let complexValue1 = 'a complex ? value / with # invalid characters';
+        let values = [
+            'test',
+            '1',
+            encodeURIComponent(complexValue0),
+            'thing'
+        ];
+        let testHash = values.join('/') + '?' + encodeURIComponent(complexValue1);
+        let match = testHash.match(regex);
+        expect(match).to.be.instanceof(Array);
+        expect(match.length).to.equal(5);
+        expect(match[1]).to.equal('1');
+        expect(match[2]).to.equal('thing');
+        expect(match[3]).to.equal('a value');
+        expect(match[4]).to.equal('and stuff');
+    });
 });
 
 describe('RouteUtils.functionToRegex', () => {

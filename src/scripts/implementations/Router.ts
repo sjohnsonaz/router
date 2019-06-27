@@ -161,7 +161,7 @@ export default class Router {
     }
 
     static goToRoute(...args: string[]) {
-        window.location.hash = args.join('/');
+        window.location.hash = args.map(value => encodeURIComponent(value)).join('/');
     }
 
     static goToPage(href: string) {
