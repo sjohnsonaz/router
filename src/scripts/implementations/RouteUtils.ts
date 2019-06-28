@@ -80,7 +80,7 @@ export default class RouteUtils {
 
     static createUrl(...parts: any[]) {
         var joined = parts.join('/');
-        return RouteUtil.normalize(joined);
+        return RouteUtils.normalize(joined);
     }
 
     static normalize(str: string) {
